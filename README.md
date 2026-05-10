@@ -3,7 +3,7 @@
 Ce dépôt contient l'intégralité de mon portfolio numérique réalisé dans le cadre de ma deuxième année de **BUT Science des Données** à l'IUT d'Avignon.
 
 ## 🚀 Accès direct
-[Consulter mon portfolio en ligne](https://ycham9.github.io/Portfolio-BUT2/)
+[Consulter mon portfolio en ligne](https://ycham-athoumani.github.io/Portfolio-BUT2/)
 
 ## 📋 Présentation du projet
 Ce portfolio a été conçu pour illustrer ma progression et la validation des compétences acquises durant mon cursus. Il s'articule autour des trois piliers fondamentaux de la formation :
