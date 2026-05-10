@@ -394,24 +394,34 @@
   .passion-card p { color: rgba(240,238,232,0.7); font-size: 16px; line-height: 1.7; }
 
   /* ── CV ── */
-  .cv-section {
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center; gap: 32px;
-  }
-  .cv-frame {
-    border: 1px solid var(--border); padding: 64px 96px;
-    background: var(--surface); position: relative;
-  }
-  .cv-frame::before {
-    content: ''; position: absolute;
-    top: -1px; left: 40px; right: 40px; height: 3px;
-    background: linear-gradient(to right, transparent, var(--cyan), transparent);
-  }
-  .cv-placeholder {
-    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
-    letter-spacing: 0.15em; text-transform: uppercase;
-  }
-  .cv-placeholder span { color: var(--cyan); display: block; font-size: 32px; margin-bottom: 16px; }
+.cv-section {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 32px;
+}
+
+.cv-frame {
+  border: 1px solid var(--border); 
+  padding: 10px; /* Réduit pour laisser de la place au PDF */
+  background: var(--surface); 
+  position: relative;
+  width: 100%;
+  max-width: 900px; /* Largeur optimale pour un CV */
+}
+
+.cv-frame::before {
+  content: ''; position: absolute;
+  top: -1px; left: 40px; right: 40px; height: 3px;
+  background: linear-gradient(to right, transparent, var(--cyan), transparent);
+}
+
+/* Style pour l'affichage du PDF */
+.cv-iframe {
+  width: 100%;
+  height: 800px;
+  border: none;
+  border-radius: 4px;
+  display: block;
+}
 
   /* ── CONCLUSION ── */
   .conclusion-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 80px; align-items: start; }
@@ -887,11 +897,15 @@
   <h2 class="section-title reveal">Curriculum<br><em>Vitæ</em></h2>
   <div class="cv-section reveal">
     <div class="cv-frame">
-      <div class="cv-placeholder">
-        <span>📄</span>
-        Insérez ici votre CV à jour<br>
-        <small style="color:var(--muted);font-size:10px;letter-spacing:0.1em;">IMAGE / PDF / LIEN</small>
-      </div>
+      <div class="cv-frame reveal">
+  <iframe class="cv-iframe" src="https://ycham9.github.io/Portfolio-BUT2/cv-ycham-athoumani.pdf"></iframe>
+</div>
+
+<div style="margin-top: 24px;">
+  <a href="https://ycham9.github.io/Portfolio-BUT2/cv-ycham-athoumani.pdf" target="_blank" class="btn">
+    <span class="btn-text">Ouvrir le PDF en plein écran</span>
+  </a>
+</div>
     </div>
   </div>
 </section>
