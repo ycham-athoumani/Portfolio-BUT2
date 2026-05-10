@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ycham Athoumani — Portfolio BUT Science des Données</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --surface: #0d0d14;
+    --surface2: #13131e;
+    --cyan: #00e5ff;
+    --cyan-dim: rgba(0,229,255,0.12);
+    --gold: #ffc553;
+    --white: #f0eee8;
+    --muted: #6b6b80;
+    --border: rgba(0,229,255,0.15);
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Crimson Text', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--cyan); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(0,229,255,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.12s ease, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+  /* ── GRID BACKGROUND ── */
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .grid-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,229,255,0.06) 0%, transparent 70%);
+  }
+
+  /* ── SIDE NAV ── */
+  .side-nav {
+    position: fixed; right: 28px; top: 50%;
+    transform: translateY(-50%); z-index: 100;
+    display: flex; flex-direction: column; gap: 12px;
+    align-items: flex-end;
+  }
+  .side-nav a {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--muted);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; transition: color 0.3s;
+  }
+  .side-nav a .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted); transition: background 0.3s, transform 0.3s, width 0.3s;
+    flex-shrink: 0;
+  }
+  .side-nav a:hover, .side-nav a.active {
+    color: var(--cyan);
+  }
+  .side-nav a:hover .dot, .side-nav a.active .dot {
+    background: var(--cyan); transform: scale(1.5); width: 6px;
+  }
+  .side-nav .label { opacity: 0; transition: opacity 0.3s; }
+  .side-nav a:hover .label { opacity: 1; }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; padding: 0 8vw;
+    position: relative; overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.3em; color: var(--cyan);
+    text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 48px; height: 1px;
+    background: var(--cyan);
+  }
+  .hero-name {
+    font-family: var(--font-display); font-size: clamp(52px, 9vw, 130px);
+    font-weight: 800; line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    position: relative;
+  }
+  .hero-name .glitch {
+    position: relative; display: inline-block;
+  }
+  .hero-name .glitch::before,
+  .hero-name .glitch::after {
+    content: attr(data-text); position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .hero-name .glitch::before {
+    color: var(--cyan); clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    transform: translate(-3px, 0); animation: glitch1 4s infinite;
+    opacity: 0;
+  }
+  .hero-name .glitch::after {
+    color: var(--gold); clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    transform: translate(3px, 0); animation: glitch2 4s infinite;
+    opacity: 0;
+  }
+  @keyframes glitch1 {
+    0%,90%,100% { opacity: 0; } 91%,93% { opacity: 0.8; transform: translate(-4px,0); }
+    92%,94% { opacity: 0; transform: translate(4px,0); }
+  }
+  @keyframes glitch2 {
+    0%,90%,100% { opacity: 0; } 91%,93% { opacity: 0.6; transform: translate(4px,0); }
+    92%,94% { opacity: 0; transform: translate(-4px,0); }
+  }
+  .hero-sub {
+    font-family: var(--font-mono); font-size: clamp(13px, 1.5vw, 17px);
+    color: var(--gold); margin-top: 28px;
+    letter-spacing: 0.05em;
+  }
+  .hero-desc {
+    max-width: 560px; margin-top: 24px;
+    color: rgba(240,238,232,0.65); font-size: 17px;
+    line-height: 1.75;
+  }
+  .hero-cta {
+    margin-top: 48px; display: flex; gap: 20px; align-items: center;
+  }
+  .btn {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; text-decoration: none; padding: 14px 28px;
+    border: 1px solid var(--cyan); color: var(--cyan); background: transparent;
+    transition: background 0.3s, color 0.3s; cursor: none; display: inline-block;
+  }
+  .btn:hover { background: var(--cyan); color: var(--bg); }
+  .btn-ghost {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; text-decoration: none; color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+    transition: color 0.3s;
+  }
+  .btn-ghost::after { content: '↓'; font-size: 16px; transition: transform 0.3s; }
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost:hover::after { transform: translateY(4px); }
+
+  .hero-stat-row {
+    position: absolute; bottom: 48px; right: 8vw;
+    display: flex; gap: 40px;
+  }
+  .hero-stat { text-align: right; }
+  .hero-stat .num {
+    font-family: var(--font-display); font-size: 36px; font-weight: 800;
+    color: var(--cyan); line-height: 1;
+  }
+  .hero-stat .lbl {
+    font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px;
+  }
+
+  .hero-scroll-line {
+    position: absolute; bottom: 0; left: 8vw;
+    width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, var(--cyan));
+    animation: pulse-line 2s infinite;
+  }
+  @keyframes pulse-line { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+  /* ── SECTION WRAPPER ── */
+  .section-wrap {
+    padding: 120px 8vw;
+    border-top: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3em;
+    color: var(--cyan); text-transform: uppercase; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--cyan); }
+  .section-num {
+    font-family: var(--font-display); font-size: clamp(80px,12vw,160px);
+    font-weight: 800; color: transparent;
+    -webkit-text-stroke: 1px rgba(0,229,255,0.12);
+    line-height: 0.8; position: absolute; right: 7vw; top: 40px;
+    pointer-events: none; user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: clamp(32px, 4vw, 54px);
+    font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--white); margin-bottom: 40px;
+    max-width: 700px;
+  }
+  .section-title em {
+    font-style: normal; color: var(--cyan);
+  }
+
+  /* ── BIO ── */
+  .bio-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: start;
+  }
+  .bio-text p { color: rgba(240,238,232,0.8); margin-bottom: 20px; font-size: 17px; }
+  .bio-highlights {
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .bio-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 24px 28px; position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .bio-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--cyan); transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.4s ease;
+  }
+  .bio-card:hover { border-color: var(--cyan); transform: translateX(6px); }
+  .bio-card:hover::before { transform: scaleY(1); }
+  .bio-card-icon { font-size: 22px; margin-bottom: 10px; }
+  .bio-card-title {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .bio-card-text { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FORMATION ── */
+  .formation-layout { display: grid; grid-template-columns: 5fr 4fr; gap: 64px; }
+  .formation-text p { color: rgba(240,238,232,0.8); margin-bottom: 20px; font-size: 17px; }
+  .formation-tags {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px;
+  }
+  .tag {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 7px 14px;
+    border: 1px solid var(--border); color: var(--muted);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .tag:hover { border-color: var(--cyan); color: var(--cyan); }
+  .formation-side {
+    background: var(--surface); border: 1px solid var(--border); padding: 36px;
+  }
+  .formation-side h3 {
+    font-family: var(--font-display); font-size: 20px; font-weight: 700;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  .career-list { list-style: none; }
+  .career-list li {
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 12px; transition: color 0.3s;
+  }
+  .career-list li::before { content: '▶'; font-size: 8px; color: var(--cyan); flex-shrink: 0; }
+  .career-list li:hover { color: var(--white); }
+
+  /* ── COMPETENCES / PROJETS ── */
+  .competence-header {
+    display: flex; align-items: center; gap: 20px; margin-bottom: 48px;
+  }
+  .competence-badge {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; padding: 8px 16px;
+    background: var(--cyan-dim); border: 1px solid var(--cyan); color: var(--cyan);
+  }
+  .projects-stack { display: flex; flex-direction: column; gap: 3px; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    overflow: hidden; transition: border-color 0.3s;
+  }
+  .project-card:hover { border-color: rgba(0,229,255,0.4); }
+  .project-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 36px; cursor: none;
+    transition: background 0.3s;
+  }
+  .project-header:hover { background: var(--surface2); }
+  .project-level {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--cyan); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .project-title {
+    font-family: var(--font-display); font-size: clamp(17px,2vw,22px);
+    font-weight: 700; color: var(--white);
+  }
+  .project-toggle {
+    font-family: var(--font-mono); font-size: 20px; color: var(--cyan);
+    transition: transform 0.4s; flex-shrink: 0; user-select: none;
+  }
+  .project-card.open .project-toggle { transform: rotate(45deg); }
+  .project-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), padding 0.4s;
+    padding: 0 36px;
+  }
+  .project-card.open .project-body {
+    max-height: 1200px; padding: 0 36px 36px;
+  }
+  .project-section-title {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 8px; margin-top: 24px;
+  }
+  .project-section-title:first-child { margin-top: 0; }
+  .project-body p {
+    color: rgba(240,238,232,0.75); font-size: 16px; margin-bottom: 14px; line-height: 1.7;
+  }
+  .project-retenu {
+    background: var(--bg); border-left: 3px solid var(--cyan);
+    padding: 16px 20px; margin-top: 20px;
+  }
+  .project-retenu p { color: rgba(0,229,255,0.85); margin-bottom: 0; font-style: italic; }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2px;
+  }
+  .skill-block {
+    background: var(--surface); padding: 36px 32px;
+    position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .skill-block:hover { background: var(--surface2); }
+  .skill-block::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--cyan), transparent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.5s;
+  }
+  .skill-block:hover::after { transform: scaleX(1); }
+  .skill-icon { font-size: 28px; margin-bottom: 16px; }
+  .skill-name {
+    font-family: var(--font-display); font-size: 18px; font-weight: 700;
+    color: var(--white); margin-bottom: 12px;
+  }
+  .skill-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-item {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    padding: 5px 12px; background: var(--bg); color: var(--muted);
+    border: 1px solid var(--border); transition: color 0.3s, border-color 0.3s;
+  }
+  .skill-block:hover .skill-item { border-color: rgba(0,229,255,0.25); color: rgba(240,238,232,0.8); }
+
+  /* ── PASSIONS ── */
+  .passions-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+  .passion-card {
+    background: var(--surface); padding: 56px 48px; position: relative; overflow: hidden;
+  }
+  .passion-card::before {
+    content: attr(data-emoji);
+    position: absolute; right: -20px; bottom: -20px;
+    font-size: 140px; opacity: 0.06; transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+  }
+  .passion-card:hover::before { opacity: 0.12; transform: scale(1.1) rotate(-5deg); }
+  .passion-card h3 {
+    font-family: var(--font-display); font-size: 26px; font-weight: 800;
+    color: var(--white); margin-bottom: 16px;
+  }
+  .passion-card p { color: rgba(240,238,232,0.7); font-size: 16px; line-height: 1.7; }
+
+  /* ── CV ── */
+  .cv-section {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 32px;
+  }
+  .cv-frame {
+    border: 1px solid var(--border); padding: 64px 96px;
+    background: var(--surface); position: relative;
+  }
+  .cv-frame::before {
+    content: ''; position: absolute;
+    top: -1px; left: 40px; right: 40px; height: 3px;
+    background: linear-gradient(to right, transparent, var(--cyan), transparent);
+  }
+  .cv-placeholder {
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .cv-placeholder span { color: var(--cyan); display: block; font-size: 32px; margin-bottom: 16px; }
+
+  /* ── CONCLUSION ── */
+  .conclusion-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 80px; align-items: start; }
+  .conclusion-text {
+    font-family: var(--font-body); font-size: 19px;
+    color: rgba(240,238,232,0.8); line-height: 1.8;
+  }
+  .conclusion-quote {
+    font-family: var(--font-display); font-size: 28px; font-weight: 800;
+    color: var(--cyan); line-height: 1.3; letter-spacing: -0.01em;
+    border-left: 3px solid var(--cyan); padding-left: 24px;
+  }
+
+  /* ── ANNEXES ── */
+  .annexes-items { display: flex; flex-direction: column; gap: 3px; }
+  .annexe-item {
+    background: var(--surface); padding: 24px 32px;
+    display: flex; align-items: center; gap: 20px;
+    border: 1px solid var(--border); transition: border-color 0.3s, background 0.3s;
+  }
+  .annexe-item:hover { border-color: var(--cyan); background: var(--surface2); }
+  .annexe-num {
+    font-family: var(--font-mono); font-size: 11px; color: var(--cyan);
+    opacity: 0.6; flex-shrink: 0; width: 32px;
+  }
+  .annexe-text { font-size: 16px; color: rgba(240,238,232,0.75); flex: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    position: relative; z-index: 1;
+  }
+  footer .footer-name { color: var(--white); font-size: 13px; font-weight: 700; }
+  footer .footer-line {
+    height: 1px; flex: 1; background: var(--border); margin: 0 32px;
+    max-width: 300px;
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left {
+    opacity: 0; transform: translateX(-40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .bio-grid, .formation-layout, .conclusion-layout { grid-template-columns: 1fr; gap: 40px; }
+    .passions-layout { grid-template-columns: 1fr; }
+    .hero-stat-row { display: none; }
+    .side-nav { display: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .section-num { display: none; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+
+<!-- Side Nav -->
+<nav class="side-nav" id="sideNav">
+  <a href="#bio" data-section="bio"><span class="label">Biographie</span><span class="dot"></span></a>
+  <a href="#formation" data-section="formation"><span class="label">Formation</span><span class="dot"></span></a>
+  <a href="#traiter" data-section="traiter"><span class="label">Traiter</span><span class="dot"></span></a>
+  <a href="#analyser" data-section="analyser"><span class="label">Analyser</span><span class="dot"></span></a>
+  <a href="#valoriser" data-section="valoriser"><span class="label">Valoriser</span><span class="dot"></span></a>
+  <a href="#modeliser" data-section="modeliser"><span class="label">Modéliser</span><span class="dot"></span></a>
+  <a href="#competences" data-section="competences"><span class="label">Compétences</span><span class="dot"></span></a>
+  <a href="#passions" data-section="passions"><span class="label">Passions</span><span class="dot"></span></a>
+  <a href="#conclusion" data-section="conclusion"><span class="label">Conclusion</span><span class="dot"></span></a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow">Portfolio BUT Science des Données</div>
+  <h1 class="hero-name">
+    <span class="glitch" data-text="YCHAM">YCHAM</span><br>
+    <span class="glitch" data-text="ATHOUMANI">ATHOUMANI</span>
+  </h1>
+  <p class="hero-sub">BUT2 — Science des Données &nbsp;/&nbsp; Data Analytics</p>
+  <p class="hero-desc">
+    Transformer des données en solutions concrètes n'est pas seulement un objectif,
+    c'est une véritable ambition.
+  </p>
+  <div class="hero-cta">
+    <a href="#bio" class="btn">Découvrir</a>
+    <a href="#bio" class="btn-ghost">Scroll</a>
+  </div>
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <div class="num">6+</div>
+      <div class="lbl">Projets SAE</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">3</div>
+      <div class="lbl">Compétences</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">2</div>
+      <div class="lbl">Années</div>
+    </div>
+  </div>
+  <div class="hero-scroll-line"></div>
+</section>
+
+<!-- BIO -->
+<section id="bio" class="section-wrap" style="position:relative;">
+  <div class="section-num">01</div>
+  <div class="section-label">01 &mdash; Biographie</div>
+  <h2 class="section-title reveal">La donnée comme<br><em>levier stratégique</em></h2>
+  <div class="bio-grid">
+    <div class="bio-text reveal">
+      <p>Transformer des données en solutions concrètes n'est pas seulement un objectif, c'est une véritable ambition. Élève de BUT Science des Données, je développe des compétences techniques et d'analyse qui me permettent d'exploiter et de me servir des données pour la prise de décision.</p>
+      <p>J'ai déjà acquis des bases en programmation, en Python et SQL par exemple, ainsi qu'en traitement et gestion de bases de données.</p>
+      <p>Après mon BUT je souhaite poursuivre mes études en école d'ingénieur ou en master afin de me spécialiser dans la Data Science et d'intégrer un métier qui me permettra d'exploiter la donnée comme levier stratégique pour les entreprises. À terme, je souhaite devenir <strong style="color:var(--cyan)">Data Analyste</strong> et contribuer à l'optimisation des prises de décisions des entreprises grâce à des données.</p>
+    </div>
+    <div class="bio-highlights">
+      <div class="bio-card reveal" style="transition-delay:0.1s">
+        <div class="bio-card-icon">🏀</div>
+        <div class="bio-card-title">Basketball</div>
+        <div class="bio-card-text">Rigueur, gestion de l'effort et travail en équipe — des qualités directement transposables à l'analyse de données.</div>
+      </div>
+      <div class="bio-card reveal" style="transition-delay:0.2s">
+        <div class="bio-card-icon">🎯</div>
+        <div class="bio-card-title">Engagement Associatif</div>
+        <div class="bio-card-text">Sens de l'organisation et capacité d'adaptation développés lors d'activités au lycée.</div>
+      </div>
+      <div class="bio-card reveal" style="transition-delay:0.3s">
+        <div class="bio-card-icon">🚀</div>
+        <div class="bio-card-title">Objectif</div>
+        <div class="bio-card-text">École d'ingénieur ou Master en Data Science, spécialisation Data Analyst.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMATION -->
+<section id="formation" class="section-wrap" style="position:relative;">
+  <div class="section-num">02</div>
+  <div class="section-label">02 &mdash; Formation</div>
+  <h2 class="section-title reveal">BUT Science<br>des <em>Données</em></h2>
+  <div class="formation-layout">
+    <div class="formation-text reveal">
+      <p>Le BUT Science des Données est une formation professionnalisante sur trois ans, qui prépare aux métiers de la data à travers plusieurs notions fondamentales. On se concentre particulièrement sur le traitement des données, leur analyse statistique et leur valorisation dans un contexte professionnel.</p>
+      <p>Cette formation offre une approche complète et progressive, intégrant à la fois des compétences techniques en informatique et statistiques, mais aussi des capacités en communication et en gestion de projet.</p>
+      <p>J'ai choisi ce cursus pour son approche concrète et son équilibre entre programmation, statistiques et analyse de données — une formation qui me prépare aux enjeux du Big Data et de l'intelligence artificielle.</p>
+      <div class="formation-tags">
+        <span class="tag">Python</span>
+        <span class="tag">SQL</span>
+        <span class="tag">R / RStudio</span>
+        <span class="tag">Statistiques</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">Big Data</span>
+        <span class="tag">Data Viz</span>
+        <span class="tag">ETL</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">RGPD</span>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s">
+      <div class="formation-side">
+        <h3>Débouchés</h3>
+        <ul class="career-list">
+          <li>Data Analyst</li>
+          <li>Data Scientist</li>
+          <li>Data Engineer</li>
+          <li>Business Intelligence Analyst</li>
+          <li>Statisticien / Analyste décisionnel</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAITER -->
+<section id="traiter" class="section-wrap" style="position:relative;">
+  <div class="section-num">03</div>
+  <div class="section-label">03 &mdash; Compétence</div>
+  <div class="competence-header reveal">
+    <h2 class="section-title" style="margin-bottom:0;">TRAITER <em>—</em><br>Gérer les données</h2>
+    <span class="competence-badge">Compétence n°1</span>
+  </div>
+  <div class="projects-stack">
+    <!-- Projet Niveau 1 -->
+    <div class="project-card reveal" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 1 — BUT1</div>
+          <div class="project-title">Préparation et synthèse d'un tableau de données — Immobilier</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>Pour cette SAE, j'ai étudié les transactions immobilières à Bordeaux et Perpignan en me basant sur les données DVF du premier semestre 2024. Le concept était de partir d'un fichier volumineux et quelque peu chaotique, d'en tirer les données clés (prix au m², saisonnalité, dimensions moyennes) et de fournir aux intervenants locaux des orientations pratiques pour adapter leur stratégie territoriale.</p>
+        <div class="project-section-title">Méthode et nettoyage</div>
+        <p>J'ai débuté par l'importation du document texte non formaté, puis effectué un tri pour isoler uniquement les ventes de maisons et d'appartements à Bordeaux et Perpignan, sans inclure les ventes en lots multiples. Suite à l'élimination des colonnes superflues et la suppression des répétitions, j'ai déterminé le coût au mètre carré en associant la valeur du terrain à la superficie Carrez.</p>
+        <p>Le processus le plus long a été la purification des données : vérification des valeurs absentes, harmonisation des formats de dates et des chiffres, isolation du mois de chaque opération pour analyser la saisonnalité. Afin d'éviter une répétition manuelle, j'ai automatisé ces étapes à l'aide d'un script R.</p>
+        <div class="project-retenu">
+          <p>💡 Ce que j'ai surtout retenu, c'est que le nettoyage, bien qu'il soit souvent négligé, est essentiel pour obtenir des conclusions fiables.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Projet Niveau 2 -->
+    <div class="project-card reveal" style="transition-delay:0.1s" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 2 — BUT2</div>
+          <div class="project-title">Intégration de données dans un Datawarehouse</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>Le projet s'est déroulé dans le cadre d'un scénario où une entreprise utilise un serveur Nextcloud pour stocker ses documents. Mon rôle était de préparer le terrain en créant un entrepôt de données capable de centraliser ces informations pour pouvoir les analyser plus tard.</p>
+        <p>L'objectif était de mettre en place un flux ETL à partir de données réelles — extraire les informations d'un serveur Nextcloud (sous MariaDB) pour alimenter notre propre base de données PostgreSQL.</p>
+        <div class="project-section-title">Méthode et nettoyage</div>
+        <p>J'ai utilisé une démarche ETL classique en me servant de R pour faire le lien entre les deux bases. J'ai d'abord exploré les tables de Nextcloud pour repérer celles qui étaient utiles, puis j'ai établi les connexions vers MariaDB et PostgreSQL. Lors de l'extraction, j'ai utilisé des requêtes SQL et des fonctions R pour nettoyer les données : transformation des formats de dates illisibles et conversion des tailles de fichiers en Mo ou Go. Enfin, j'ai tout automatisé dans un script R Markdown.</p>
+        <div class="project-retenu">
+          <p>💡 Ce projet m'a appris à gérer différents outils en faisant communiquer deux types de bases de données, MySQL et PostgreSQL. J'ai compris que la phase de transformation est la plus importante : sans nettoyage rigoureux, les données sont inutilisables pour l'analyse.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYSER -->
+<section id="analyser" class="section-wrap" style="position:relative;">
+  <div class="section-num">04</div>
+  <div class="section-label">04 &mdash; Compétence</div>
+  <div class="competence-header reveal">
+    <h2 class="section-title" style="margin-bottom:0;">ANALYSER <em>—</em><br>Statistiques & Décisionnel</h2>
+    <span class="competence-badge">Compétence n°2</span>
+  </div>
+  <div class="projects-stack">
+    <div class="project-card reveal" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 1 — BUT1</div>
+          <div class="project-title">Reporting à partir de données stockées dans un SGBD</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>L'objectif de cette tâche était de convertir une base de données vierge en un rapport distinct et exploitable pour les équipes marketing et financières de la Chambre de Commerce. Nous avions des tableaux concernant les foyers, leurs acquisitions et les articles commercialisés. Mon objectif était de dégager des indicateurs clairs : répartition des dépenses par catégories, progression du chiffre d'affaires, comportements d'achat en fonction de la taille du foyer.</p>
+        <div class="project-section-title">Méthode et extraction</div>
+        <p>J'ai débuté en me connectant à la base de données PostgreSQL, en parcourant rapidement les tables pour identifier les colonnes essentielles : montants, dates et catégories. Au lieu d'extraire des millions de lignes, j'ai restreint la période et les champs essentiels pour répondre à des interrogations précises. Après validation des requêtes, j'ai procédé à l'exportation des résultats au format CSV.</p>
+        <div class="project-section-title">Analyse et points marquants</div>
+        <p>L'alimentation représente plus de 40 % des dépenses en zone urbaine. La dépense moyenne par ménage augmente nettement avec la taille du foyer : un foyer de cinq personnes dépense environ 25 % de plus qu'un foyer de deux. On observe aussi un pic de consommation au début de l'été, lié aux vacances et aux promotions saisonnières.</p>
+        <div class="project-retenu">
+          <p>💡 Sélectionner adéquatement ses données lors de l'extraction permet d'éviter des heures de nettoyage par la suite. J'ai perfectionné mes compétences en SQL pour rédiger des requêtes efficaces et sûres.</p>
+        </div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.1s" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 2 — BUT2</div>
+          <div class="project-title">Description et Prévision de Données Temporelles — Pollution NO₂</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>Pour ce projet, on s'est mis dans la peau d'un analyste chargé de surveiller la pollution atmosphérique, plus précisément le dioxyde d'azote (NO2). On avait à disposition un fichier de données avec des relevés mensuels sur plusieurs années. L'idée, c'était de comprendre comment la pollution avait évolué pour pouvoir prédire les niveaux des douze prochains mois — le genre de travail qu'une collectivité pourrait demander pour anticiper les pics de pollution.</p>
+        <div class="project-section-title">Méthodologie</div>
+        <p>J'ai commencé par observer la forme globale des données sur R. J'ai tout de suite vu qu'il y avait une tendance à la hausse et des cycles qui se répétaient chaque année. Pour faire une prévision correcte, j'ai décomposé la série en plusieurs morceaux : isolation de la tendance générale avec une droite de régression, calcul de coefficients pour chaque mois pour représenter l'effet des saisons, et analyse des résidus pour affiner la précision. À la fin, j'ai recollé tous ces morceaux pour sortir une courbe de prévision pour l'année suivante, avec calcul de l'erreur moyenne.</p>
+        <div class="project-retenu">
+          <p>💡 Une série temporelle, c'est bien plus qu'une simple courbe. J'ai appris à "nettoyer" des données en enlevant l'effet des saisons pour voir la vraie évolution de fond (série CVS) — une compétence super utile pour tout job d'anticipation basé sur des chiffres historiques.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALORISER -->
+<section id="valoriser" class="section-wrap" style="position:relative;">
+  <div class="section-num">05</div>
+  <div class="section-label">05 &mdash; Compétence</div>
+  <div class="competence-header reveal">
+    <h2 class="section-title" style="margin-bottom:0;">VALORISER <em>—</em><br>Communication & Dataviz</h2>
+    <span class="competence-badge">Compétence n°3</span>
+  </div>
+  <div class="projects-stack">
+    <div class="project-card reveal" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 1 — BUT1</div>
+          <div class="project-title">Enquête Statistique — Partenariat Stellantis France</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>Ce projet a été réalisé dans le cadre d'un partenariat avec Stellantis France. L'idée était de concevoir un questionnaire pour mieux comprendre comment les automobilistes se comportent face aux enjeux écologiques actuels : quels critères poussent les gens à choisir un véhicule, s'ils sont intéressés par les technologies plus propres. Le but final était d'utiliser ces retours pour proposer des solutions concrètes afin de réduire les émissions de CO2.</p>
+        <div class="project-section-title">Méthodologie</div>
+        <p>On a travaillé en équipe pour structurer ce questionnaire autour de six thèmes principaux. On l'a ensuite diffusé pendant deux semaines chez des concessionnaires et auprès du grand public, ce qui nous a permis de récolter presque 200 réponses. Grâce à une analyse de corrélation sur RStudio, j'ai pu démontrer qu'il y avait un lien direct entre la consommation de carburant et la pollution. J'ai aussi utilisé des diagrammes à moustaches pour prouver visuellement que les SUV sont nettement plus polluants que les citadines.</p>
+        <div class="project-section-title">Présentation et recommandations</div>
+        <p>Pour présenter nos conclusions, j'ai créé un PowerPoint avec des graphiques simples. Nous avons proposé d'augmenter les aides financières pour les voitures les moins polluantes (catégories A et B) et de mettre en place un plafond d'émission à 200 g/km pour les véhicules les plus récents.</p>
+        <div class="project-retenu">
+          <p>💡 Il ne suffit pas de faire des calculs compliqués, il faut surtout savoir les expliquer simplement. J'ai compris l'importance de vulgariser les données pour un public non expert — essentiel pour faire passer des recommandations en entreprise.</p>
+        </div>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:0.1s" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 2 — BUT2</div>
+          <div class="project-title">Mise en Œuvre du RGPD — Automatisation par Google Apps Script</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte</div>
+        <p>Ce projet portait sur les règles du RGPD et les enjeux éthiques liés à la protection des données personnelles. Au lieu de répondre aux questions de manière classique sur un document texte, j'ai choisi de lier cet exercice juridique à mes compétences en programmation pour traiter des sujets sérieux (consentement, droit à l'oubli) tout en montrant qu'on peut automatiser la création de rapports officiels.</p>
+        <div class="project-section-title">Support visuel créé</div>
+        <p>J'ai réalisé une présentation Google Slides générée entièrement par du code grâce à l'extension Google Apps Script. J'ai écrit un script capable de récupérer mes analyses juridiques pour les transformer automatiquement en diapositives structurées — un support visuel propre et dynamique sans mise en page manuelle.</p>
+        <div class="project-section-title">Message transmis</div>
+        <p>À travers ce travail, j'ai voulu montrer que le RGPD est une responsabilité éthique indispensable pour n'importe quel professionnel de la donnée. La transparence et la sécurité ne sont pas seulement des obligations légales, mais des gages de confiance pour les utilisateurs.</p>
+        <div class="project-retenu">
+          <p>💡 La technique peut aider à simplifier la mise en conformité et à rendre les informations juridiques beaucoup plus faciles à partager et à comprendre.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODÉLISER -->
+<section id="modeliser" class="section-wrap" style="position:relative;">
+  <div class="section-num">06</div>
+  <div class="section-label">06 &mdash; Compétence Optionnelle</div>
+  <div class="competence-header reveal">
+    <h2 class="section-title" style="margin-bottom:0;">MODÉLISER <em>—</em><br>Échantillonnage</h2>
+    <span class="competence-badge">Compétence optionnelle</span>
+  </div>
+  <div class="projects-stack">
+    <div class="project-card reveal" onclick="toggleProject(this)">
+      <div class="project-header">
+        <div>
+          <div class="project-level">Niveau 1 — BUT1</div>
+          <div class="project-title">Recueil & Analyse par Échantillonnage — Données de Criminalité</div>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-body">
+        <div class="project-section-title">Contexte et objectifs</div>
+        <p>Ce projet portait sur l'analyse des données de criminalité pour apprendre à estimer des paramètres sur une population entière à partir d'un échantillon réduit. L'objectif était de mettre en place une enquête statistique rigoureuse pour obtenir des chiffres fiables sur les différents types de délits, et de montrer qu'avec les bonnes méthodes de sélection, on peut obtenir une image très précise de la réalité sans analyser l'intégralité de la base.</p>
+        <div class="project-section-title">Méthodologie</div>
+        <p>J'ai utilisé une méthode de stratification sur R, divisant les données en groupes homogènes pour que l'échantillon soit le plus représentatif possible. J'ai comparé plusieurs types d'allocations : l'allocation proportionnelle pour respecter les tailles de chaque groupe, et l'allocation optimale pour réduire l'erreur sur les zones les plus instables. Pour que les résultats collent vraiment à la population d'origine, j'ai aussi appliqué des techniques de redressement et de pondération. Les estimations ont été encadrées par des intervalles de confiance, puis j'ai utilisé R Markdown pour générer automatiquement un rapport final structuré au format PDF.</p>
+        <div class="project-retenu">
+          <p>💡 La précision d'un sondage ne dépend pas seulement du nombre de personnes interrogées, mais surtout de la manière dont on construit l'échantillon. L'allocation optimale et le redressement permettent de corriger les biais et d'obtenir des estimations plus justes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPÉTENCES TRANSVERSALES -->
+<section id="competences" class="section-wrap" style="position:relative;">
+  <div class="section-num">07</div>
+  <div class="section-label">07 &mdash; Mes Compétences</div>
+  <h2 class="section-title reveal">Compétences<br><em>Transversales & Numériques</em></h2>
+  <div class="skills-grid">
+    <div class="skill-block reveal">
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-name">Langages & Programmation</div>
+      <div class="skill-items">
+        <span class="skill-item">Python</span>
+        <span class="skill-item">SQL</span>
+        <span class="skill-item">R / RStudio</span>
+        <span class="skill-item">R Markdown</span>
+        <span class="skill-item">Apps Script</span>
+      </div>
+    </div>
+    <div class="skill-block reveal" style="transition-delay:0.1s">
+      <div class="skill-icon">🗄️</div>
+      <div class="skill-name">Bases de Données</div>
+      <div class="skill-items">
+        <span class="skill-item">PostgreSQL</span>
+        <span class="skill-item">MariaDB / MySQL</span>
+        <span class="skill-item">ETL</span>
+        <span class="skill-item">Datawarehouse</span>
+        <span class="skill-item">NoSQL</span>
+      </div>
+    </div>
+    <div class="skill-block reveal" style="transition-delay:0.2s">
+      <div class="skill-icon">📊</div>
+      <div class="skill-name">Statistiques & Analyse</div>
+      <div class="skill-items">
+        <span class="skill-item">Séries temporelles</span>
+        <span class="skill-item">Intervalles de confiance</span>
+        <span class="skill-item">Stratification</span>
+        <span class="skill-item">Régression</span>
+        <span class="skill-item">Corrélation</span>
+      </div>
+    </div>
+    <div class="skill-block reveal" style="transition-delay:0.3s">
+      <div class="skill-icon">🎨</div>
+      <div class="skill-name">Visualisation & Communication</div>
+      <div class="skill-items">
+        <span class="skill-item">DataViz</span>
+        <span class="skill-item">PowerPoint</span>
+        <span class="skill-item">Google Slides</span>
+        <span class="skill-item">Tableaux de bord</span>
+        <span class="skill-item">Reporting</span>
+      </div>
+    </div>
+    <div class="skill-block reveal" style="transition-delay:0.1s">
+      <div class="skill-icon">🤝</div>
+      <div class="skill-name">Soft Skills & Organisation</div>
+      <div class="skill-items">
+        <span class="skill-item">Travail en équipe</span>
+        <span class="skill-item">Gestion de projet</span>
+        <span class="skill-item">Rigueur</span>
+        <span class="skill-item">Adaptabilité</span>
+        <span class="skill-item">Vulgarisation</span>
+      </div>
+    </div>
+    <div class="skill-block reveal" style="transition-delay:0.2s">
+      <div class="skill-icon">⚖️</div>
+      <div class="skill-name">Conformité & Éthique Data</div>
+      <div class="skill-items">
+        <span class="skill-item">RGPD</span>
+        <span class="skill-item">Protection des données</span>
+        <span class="skill-item">Consentement</span>
+        <span class="skill-item">Droit à l'oubli</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSIONS -->
+<section id="passions" class="section-wrap" style="position:relative;">
+  <div class="section-num">08</div>
+  <div class="section-label">08 &mdash; Passions</div>
+  <h2 class="section-title reveal">Ce qui me<br><em>motive</em></h2>
+  <div class="passions-layout">
+    <div class="passion-card reveal" data-emoji="🏀">
+      <h3>Basketball</h3>
+      <p>Le basketball est un sport qui m'a profondément influencé — il m'a appris ce qu'est la discipline, le travail d'équipe et la persévérance face aux obstacles. Des qualités qu'on retrouve dans mes projets à l'université, où l'entraide et l'effort sont essentiels pour avancer.</p>
+    </div>
+    <div class="passion-card reveal" style="transition-delay:0.15s" data-emoji="📈">
+      <h3>La Donnée comme Pouvoir</h3>
+      <p>Je pense sincèrement que les données ont un pouvoir dans les choix des entreprises. Faire de ces simples chiffres des datavisualisations et en tirer des décisions concrètes me passionne, et je veux continuer à développer cette compétence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CV -->
+<section id="cv" class="section-wrap" style="position:relative;">
+  <div class="section-num">09</div>
+  <div class="section-label">09 &mdash; Mon CV</div>
+  <h2 class="section-title reveal">Curriculum<br><em>Vitæ</em></h2>
+  <div class="cv-section reveal">
+    <div class="cv-frame">
+      <div class="cv-placeholder">
+        <span>📄</span>
+        Insérez ici votre CV à jour<br>
+        <small style="color:var(--muted);font-size:10px;letter-spacing:0.1em;">IMAGE / PDF / LIEN</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="section-wrap" style="position:relative;">
+  <div class="section-num">10</div>
+  <div class="section-label">10 &mdash; Conclusion</div>
+  <h2 class="section-title reveal">Un chemin<br>déjà <em>bien tracé</em></h2>
+  <div class="conclusion-layout">
+    <div class="conclusion-text reveal">
+      <p>Je trouve que je suis plus compétent après avoir mené à bien tous ces projets, des projets que j'ai réalisés avec des équipes toutes différentes. Cela m'a appris à fonctionner efficacement avec n'importe quelle personne et l'importance d'avoir un plan d'action, ne pas agir à l'aveugle.</p>
+      <br>
+      <p>Je ne me suis pas trompé sur le choix de cette formation pour mon objectif de devenir Data Analyst, car j'ai déjà en l'espace d'une année appris tellement de choses concernant le traitement et la valorisation des données ce qui fait de moi une personne complètement différente du moi du lycée.</p>
+      <br>
+      <p>J'ai déjà la sensation d'avoir fait un bon bout de chemin vers mon but.</p>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s">
+      <div class="conclusion-quote">
+        "Transformer des données en<br>décisions concrètes."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEXES -->
+<section id="annexes" class="section-wrap" style="position:relative;">
+  <div class="section-num">11</div>
+  <div class="section-label">11 &mdash; Annexes</div>
+  <h2 class="section-title reveal">Ressources<br>& <em>Documents</em></h2>
+  <div class="annexes-items">
+    <div class="annexe-item reveal">
+      <span class="annexe-num">01</span>
+      <span class="annexe-text">Projets réalisés en SQL et Python — exemples concrets des compétences développées durant cette formation.</span>
+    </div>
+    <div class="annexe-item reveal" style="transition-delay:0.1s">
+      <span class="annexe-num">02</span>
+      <span class="annexe-text">Visualisations de données produites en cours — capacité à organiser et à mettre en forme des informations complexes.</span>
+    </div>
+    <div class="annexe-item reveal" style="transition-delay:0.2s">
+      <span class="annexe-num">03</span>
+      <span class="annexe-text">Rapports académiques réalisés dans le cadre des SAE — apprentissage progressif dans l'analyse et l'exploitation des données.</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-name">YCHAM ATHOUMANI</div>
+    <div style="margin-top:6px;">BUT Science des Données — BUT2</div>
+  </div>
+  <div class="footer-line"></div>
+  <div style="text-align:right;">
+    <div>Portfolio — 2024/2025</div>
+    <div style="color:var(--cyan);margin-top:4px;">Data Analytics</div>
+  </div>
+</footer>
+
+<script>
+  // ── CUSTOM CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a, button, .project-header, .bio-card, .skill-block').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      ring.style.width = '60px'; ring.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px'; cursor.style.height = '10px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // ── TOGGLE PROJECT CARDS ──
+  function toggleProject(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.project-card.open').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  // ── REVEAL ON SCROLL ──
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── SIDE NAV ACTIVE STATE ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.side-nav a');
+  const navObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.side-nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => navObs.observe(s));
+
+  // ── TYPING EFFECT on hero sub ──
+  const heroSub = document.querySelector('.hero-sub');
+  const heroText = heroSub.textContent;
+  heroSub.textContent = '';
+  let i = 0;
+  function type() {
+    if (i < heroText.length) {
+      heroSub.textContent += heroText[i++];
+      setTimeout(type, 38);
+    }
+  }
+  setTimeout(type, 800);
+</script>
+</body>
+</html>
